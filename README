@@ -1,0 +1,61 @@
+Sistema Escolar
+Descripción
+Sistema web desarrollado en PHP y MySQL para la gestión de información escolar. 
+La aplicación permite administrar alumnos, docentes, materias y grupos. 
+El servicio web se ejecuta mediante Docker y la base de datos se encuentra alojada en Clever Cloud.
+
+Para ejecutar este proyecto de forma local conectándose a la base de datos en la nube, necesitas:
+
+* Servidor web local con PHP 7.4 o superior (por ejemplo, XAMPP con únicamente el servicio de Apache activo).
+* Extensión mysqli habilitada en PHP (viene incluida por defecto en XAMPP).
+* Acceso a internet (indispensable para conectar con el servidor remoto de Clever Cloud).
+* Git o GitHub Desktop para clonar el repositorio.
+*Visual Studio Code (opcional)
+* Navegador web (Chrome, Edge, Firefox).
+
+ Configuración de la Base de Datos en Clever Cloud
+
+1. Crear el servicio: Inicia sesión en la consola de Clever Cloud(https://console.clever-cloud.com/), selecciona Create an add-on y elige MySQL.
+2. Elegir plan: Selecciona el plan gratuito (DEV) y vincula el complemento a la aplicación (o créalo de forma independiente si solo usarás la base de datos).
+3. Creación de tablas: Una vez creado el servicio, ingresa a la sección de "Database" y ejecuta los scripts SQL proporcionados en la carpeta `base` del proyecto para crear las tablas necesarias.  
+3. Obtener credenciales: Entra al panel de la base de datos creada, ve a la sección Information o Environment Variables y copia los datos de conexión (`MYSQL_ADDON_HOST`, `MYSQL_ADDON_DB`, `MYSQL_ADDON_USER`, `MYSQL_ADDON_PASSWORD` y `MYSQL_ADDON_PORT`).
+4. Configurar entorno local: Crea un archivo `.env` en la raíz del proyecto (o configura tus variables de entorno) y pega las credenciales obtenidas para conectar la aplicación sin exponer contraseñas en el repositorio.
+
+Ejemplo:
+DB_HOST=xxxxx.services.clever-cloud.com
+DB_NAME=sistema_escolar
+DB_USER=usuario
+DB_PASSWORD=password
+DB_PORT=3306
+
+
+Clonar el proyecto
+git clone https://github.com/lzzpm/sistemaescolar.git
+cd sistemaescolar
+
+Cómo Ejecutar el Proyecto de manera local (antes de usar Docker):
+Abre el panel de control de XAMPP e inicia únicamente el módulo de Apache (haz clic en Start). No enciendas MySQL local.
+Verifica que la carpeta del proyecto esté ubicada en C:\xampp\htdocs\sistemaescolar.
+Abre tu navegador e ingresa a: http://localhost/sistemaescolar/
+
+Contener el proyecto
+Abrir el cmd desde la ruta donde se encuentra el proyecto y ejecutar el siguiente comando:
+docker compose up -d --build
+Verificar los contenedores:
+docker ps
+Acceso al sistema
+Abrir en el navegador: http://localhost:8080
+
+Variables de entorno
+Por seguridad, las credenciales de Clever Cloud no se incluyen en el repositorio.
+Se proporciona únicamente un archivo:
+.env.example
+Cada desarrollador deberá crear su propio archivo:
+.env con las credenciales reales.
+
+Verificación del funcionamiento
+Ejecutar Docker Compose.
+Acceder a la aplicación desde el navegador.
+Iniciar sesión.
+Realizar consultas o registros de información.
+Verificar que la aplicación se conecta correctamente la base de datos de Clever Cloud.
