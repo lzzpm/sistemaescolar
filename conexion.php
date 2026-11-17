@@ -19,7 +19,7 @@ $pass = getenv('DB_PASSWORD') ?: getenv('MYSQL_ADDON_PASSWORD') ?: '';
 // Crear la conexión con la base de datos
 $conexion = mysqli_init();
 
-// Verifica que la conexión pueda iniciarse
+// Verifica que la conexión pueda iniciars
 if (!$conexion) {
     die("Error al inicializar MySQLi");
 }
