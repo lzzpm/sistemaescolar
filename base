@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nombre VARCHAR(100) NOT NULL,
     correo VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;[cite: 15]
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 2. Tabla de Cursos
 CREATE TABLE IF NOT EXISTS cursos (
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS cursos (
     nombre_curso VARCHAR(100) NOT NULL,
     instructor VARCHAR(100) NOT NULL,
     horario VARCHAR(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;[cite: 14]
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 3. Tabla de Alumnos
 CREATE TABLE IF NOT EXISTS alumnos (
@@ -24,4 +24,4 @@ CREATE TABLE IF NOT EXISTS alumnos (
     Correo VARCHAR(100) NOT NULL UNIQUE,
     Codigo_Curso INT NOT NULL,
     CONSTRAINT fk_curso FOREIGN KEY (Codigo_Curso) REFERENCES cursos(id) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;[cite: 13]
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
