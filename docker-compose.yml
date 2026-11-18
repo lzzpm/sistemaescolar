@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8081:80"
+    environment:
+      MYSQL_ADDON_HOST: b-mysql.services.clever-cloud.com
+      MYSQL_ADDON_PORT: 3306
+      MYSQL_ADDON_DB: b
+      MYSQL_ADDON_USER: u
+      MYSQL_ADDON_PASSWORD: J

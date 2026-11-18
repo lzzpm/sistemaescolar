@@ -2,10 +2,6 @@
 .env
 conexion-local.php
 
-# Archivos de Docker (si no deseas subirlos a GitHub)
-docker-compose.yml
-Dockerfile
-
 # Dependencias y carpetas del sistema
 vendor/
 node_modules/
