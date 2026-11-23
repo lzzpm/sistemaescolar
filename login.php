@@ -7,7 +7,6 @@ $mensaje = '';
 $vista = isset($_GET['vista']) ? $_GET['vista'] : 'login';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
     // INICIAR SESIÓN
     if (isset($_POST['accion_login'])) {
 
@@ -15,63 +14,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $conexion,
             $_POST['correo']
         );
-
         $password = $_POST['password'];
-
         $res = mysqli_query(
             $conexion,
             "SELECT * FROM usuarios WHERE correo = '$correo'"
         );
-
         if ($usr = mysqli_fetch_assoc($res)) {
-
             if (password_verify($password, $usr['password'])) {
-
                 session_regenerate_id(true);
-
                 $_SESSION['admin_usuario'] = $usr['nombre'];
-
                 header("Location: index.php");
                 exit();
-
             } else {
                 $error = "Contraseña incorrecta";
             }
-
         } else {
             $error = "El correo no está registrado";
         }
     }
-
     // REGISTRAR UNA CUENTA
     if (isset($_POST['accion_registro'])) {
-
         $nombre = mysqli_real_escape_string(
             $conexion,
             $_POST['nombre']
         );
-
         $correo = mysqli_real_escape_string(
             $conexion,
             $_POST['correo']
         );
-
         $pass_hash = password_hash(
             $_POST['password'],
             PASSWORD_BCRYPT
         );
-
         $query = "INSERT INTO usuarios
                   (nombre, correo, password)
                   VALUES ('$nombre', '$correo', '$pass_hash')";
-
         if (mysqli_query($conexion, $query)) {
-
             $mensaje = "¡Cuenta creada con éxito! Ya puedes iniciar sesión.";
             $vista = 'login';
-
         } else {
-
             $error = "El correo ya se encuentra registrado.";
             $vista = 'registro';
         }
@@ -81,22 +62,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
-
     <title>Acceso | Sistema Escolar</title>
-
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
         body {
             font-family: Arial, Helvetica, sans-serif;
             min-height: 100vh;
@@ -112,14 +88,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     rgba(3, 18, 65, 0.65)
                 ),
                 url('fondo-escolar.jpg');
-
             background-color: #06165f;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
-
         /* CONTENEDOR SIN MARCOS EXTERIORES */
         .marco {
             width: 100%;
@@ -129,7 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border: none;
             box-shadow: none;
         }
-
         /* PANEL AZUL ELIMINADO */
         .panel {
             width: 100%;
@@ -140,7 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             align-items: center;
             justify-content: center;
         }
-
         /* ÚNICAMENTE LA VENTANA BLANCA */
         .contenedor {
             width: 100%;
@@ -149,7 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-radius: 12px;
             box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
         }
-
         /* ICONO */
         .icono {
             width: 58px;
@@ -163,7 +134,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             color: #233fa5;
             font-size: 27px;
         }
-
         /* TÍTULOS */
         h1 {
             text-align: center;
@@ -171,7 +141,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-size: 25px;
             margin-bottom: 24px;
         }
-
         .subtitulo {
             text-align: center;
             color: #74809a;
@@ -179,7 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-top: -15px;
             margin-bottom: 28px;
         }
-
         /* ETIQUETAS */
         label {
             display: block;
@@ -188,7 +156,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-size: 13px;
             font-weight: bold;
         }
-
         /* CAMPOS */
         input[type="text"],
         input[type="email"],
@@ -204,14 +171,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             outline: none;
             transition: 0.2s;
         }
-
         input[type="text"]:focus,
         input[type="email"]:focus,
         input[type="password"]:focus {
             border-color: #3853b5;
             box-shadow: 0 0 0 3px rgba(56, 83, 181, 0.12);
         }
-
         /* BOTÓN PRINCIPAL */
         input[type="submit"] {
             width: 100%;
@@ -225,21 +190,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             cursor: pointer;
             transition: background 0.25s, transform 0.25s;
         }
-
         input[type="submit"]:hover {
             background: #233d9a;
             transform: translateY(-1px);
         }
-
         /* BOTÓN DE REGISTRO */
         .btn-verde {
             background: #218838 !important;
         }
-
         .btn-verde:hover {
             background: #176b2b !important;
         }
-
         /* ENLACES */
         .enlace {
             display: block;
@@ -250,12 +211,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-top: 20px;
             font-weight: bold;
         }
-
         .enlace:hover {
             color: #07146d;
             text-decoration: underline;
         }
-
         /* MENSAJES */
         .msg-error {
             background: #fff0f0;
@@ -267,7 +226,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-size: 13px;
             margin-bottom: 18px;
         }
-
         .msg-exito {
             background: #edfff2;
             color: #19713a;
@@ -278,7 +236,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-size: 13px;
             margin-bottom: 18px;
         }
-
         /* TEXTO INFERIOR */
         .pie {
             text-align: center;
@@ -303,49 +260,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
 </head>
-
 <body>
-
 <div class="marco">
-
     <div class="panel">
-
         <div style="width: 100%;">
-
             <div class="contenedor">
-
                 <?php if ($vista == 'login'): ?>
-
                     <div class="icono">🎓</div>
-
                     <h1>Iniciar Sesión</h1>
-
                     <p class="subtitulo">
                         Accede al sistema escolar
                     </p>
-
                     <?php if ($error): ?>
                         <div class="msg-error">
                             <?php echo htmlspecialchars($error); ?>
                         </div>
                     <?php endif; ?>
-
                     <?php if ($mensaje): ?>
                         <div class="msg-exito">
                             <?php echo htmlspecialchars($mensaje); ?>
                         </div>
                     <?php endif; ?>
-
                     <form method="POST">
-
                         <input
                             type="hidden"
                             name="accion_login"
                             value="1"
                         >
-
                         <label for="correo">Correo:</label>
-
                         <input
                             type="email"
                             id="correo"
@@ -354,9 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             autocomplete="email"
                             required
                         >
-
                         <label for="password">Contraseña:</label>
-
                         <input
                             type="password"
                             id="password"
@@ -365,44 +305,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             autocomplete="current-password"
                             required
                         >
-
                         <input type="submit" value="Entrar">
-
                     </form>
-
                     <a
                         href="login.php?vista=registro"
                         class="enlace"
                     >
                         ¿No tienes cuenta? Regístrate aquí
                     </a>
-
                 <?php else: ?>
-
                     <div class="icono">👤</div>
-
                     <h1>Crear Cuenta</h1>
-
                     <p class="subtitulo">
                         Regístrate en el sistema escolar
                     </p>
-
                     <?php if ($error): ?>
                         <div class="msg-error">
                             <?php echo htmlspecialchars($error); ?>
                         </div>
                     <?php endif; ?>
-
                     <form method="POST">
-
                         <input
                             type="hidden"
                             name="accion_registro"
                             value="1"
                         >
-
                         <label for="nombre">Nombre:</label>
-
                         <input
                             type="text"
                             id="nombre"
@@ -411,9 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             autocomplete="name"
                             required
                         >
-
                         <label for="correo_registro">Correo:</label>
-
                         <input
                             type="email"
                             id="correo_registro"
@@ -422,9 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             autocomplete="email"
                             required
                         >
-
                         <label for="password_registro">Contraseña:</label>
-
                         <input
                             type="password"
                             id="password_registro"
@@ -434,35 +358,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             minlength="8"
                             required
                         >
-
                         <input
                             type="submit"
                             value="Crear mi cuenta"
                             class="btn-verde"
                         >
-
                     </form>
-
                     <a
                         href="login.php?vista=login"
                         class="enlace"
                     >
                         ¿Ya tienes cuenta? Inicia sesión
                     </a>
-
                 <?php endif; ?>
-
             </div>
-
             <div class="pie">
                 Sistema de Administración Escolar
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 </body>
 </html>
