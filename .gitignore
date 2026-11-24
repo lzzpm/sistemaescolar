@@ -1,9 +1,11 @@
-# Archivos de entorno y credenciales locales
+# Archivos que contiene configuraciones y datos de acceso a la base de datos
 .env
 conexion-local.php
 
-# Dependencias y carpetas del sistema
+# Carpetas generadaspor las dependencias del proyecto
 vendor/
 node_modules/
+
+#Archivos creados automaticamente por el sistema operativo
 .DS_Store
 Thumbs.db
