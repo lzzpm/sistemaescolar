@@ -1,4 +1,6 @@
 /* SISTEMA ESCOLAR - DISEÑO GENERAL */
+
+/*COLORES Y CONFIGURACIÓN GENERAL DEL SISTEMA*/
 :root {
     --navy: #142b4a;
     --blue: #2563eb;
@@ -18,11 +20,11 @@
     --radius: 16px;
     --shadow: 0 10px 32px rgba(31, 55, 90, .08);
 }
-
+/* Aplica el mismo modelo de tamaño a todos los elementos */
 * { 
     box-sizing: border-box; 
 }
-
+/* Diseño general de la página */
 body {
     margin: 0; 
     min-height: 100vh; 
@@ -32,12 +34,12 @@ body {
     background: var(--background); 
     line-height: 1.55;
 }
-
+/* Estilo de los enlaces */
 a { 
     color: var(--blue); 
 }
 
-.contenedor {
+/* Contenedor principal del contenido */.contenedor {
     width: 100%; 
     max-width: 1200px; 
     margin: 18px auto; 
@@ -47,20 +49,20 @@ a {
     border-radius: var(--radius); 
     box-shadow: var(--shadow);
 }
-
+/* Títulos principales */
 h1 { 
     margin: 0 0 8px; 
     color: var(--navy); 
     font-size: clamp(25px, 3vw, 32px); 
     letter-spacing: -.6px; 
 }
-
+/* Subtítulos de las secciones */
 h2 { 
     margin: 30px 0 15px; 
     color: var(--navy); 
     font-size: 21px; 
 }
-
+/* Texto secundario o descriptivo */
 .subtitulo { 
     color: var(--muted); 
     margin: 0 0 26px; 
@@ -101,7 +103,9 @@ h2 {
 .cerrar-sesion { 
     color: var(--red) !important; 
 }
+/*FORMULARIOS*/
 
+/* Etiquetas de los campos */
 label { 
     display: block; 
     margin: 0 0 7px; 
@@ -109,7 +113,7 @@ label {
     font-size: 14px; 
     font-weight: 650; 
 }
-
+/* Campos para captura de datos */
 input[type="text"], 
 input[type="email"], 
 input[type="password"], 
@@ -127,14 +131,14 @@ textarea {
     outline: none; 
     transition: border-color .2s, box-shadow .2s;
 }
-
+/* Efecto al seleccionar un campo */
 input:focus, 
 select:focus, 
 textarea:focus { 
     border-color: var(--blue); 
     box-shadow: 0 0 0 3px rgba(37,99,235,.12); 
 }
-
+/* Organización de los campos del formulario */
 .formulario-campos { 
     display: grid; 
     grid-template-columns: repeat(3, minmax(0,1fr)); 
@@ -145,7 +149,9 @@ textarea:focus {
 .campo { 
     min-width: 0; 
 }
+/*BOTONES Y ACCIONES DEL SISTEMA*/
 
+/* Estilo general de los botones */
 .boton, 
 button, 
 input[type="submit"], 
@@ -169,7 +175,7 @@ input[type="submit"],
     cursor: pointer; 
     transition: background .2s, transform .2s;
 }
-
+/* Efecto al pasar el cursor sobre los botones */
 button:hover, 
 input[type="submit"]:hover, 
 .boton:hover, 
@@ -194,7 +200,7 @@ button:hover,
 .nuevo:hover { 
     background: var(--blue-hover); 
 }
-
+/* Botón para agregar información */
 .btn-add, 
 .ver-alumnos { 
     background: var(--green); 
@@ -205,7 +211,7 @@ button:hover,
 .ver-alumnos:hover { 
     background: #166534; 
 }
-
+/* Botón para modificar información */
 .btn-update, 
 .btn-mod, 
 .modificar { 
@@ -218,7 +224,7 @@ button:hover,
 .modificar:hover { 
     background: #fde68a; 
 }
-
+/* Botón para eliminar información */
 .btn-del, 
 .eliminar { 
     background: var(--red-soft); 
@@ -278,20 +284,22 @@ button:hover,
 .resumen strong { 
     font-size: 18px; 
 }
+/*TABLAS DE INFORMACIÓN*/
 
+/* Contenedor de las tablas */
 .tabla-contenedor { 
     width: 100%; 
     overflow-x: auto; 
     border: 1px solid var(--border); 
     border-radius: 11px; 
 }
-
+/* Configuración general de las tablas */
 table { 
     width: 100%; 
     border-collapse: collapse; 
     font-size: 14px; 
 }
-
+/* Encabezados de la tabla */
 th { 
     padding: 14px; 
     background: #f1f5f9; 
@@ -301,14 +309,14 @@ th {
     white-space: nowrap; 
     border-bottom: 1px solid var(--border); 
 }
-
+/* Celdas con la información */
 td { 
     padding: 14px; 
     text-align: left; 
     border-bottom: 1px solid #edf1f6; 
     vertical-align: middle; 
 }
-
+/* Efecto al pasar el cursor sobre una fila */
 tbody tr:hover td { 
     background: #f8fbff; 
 }
@@ -329,7 +337,9 @@ td .btn-del {
     text-align: center; 
     color: var(--muted); 
 }
+/*MENSAJES DEL SISTEMA*/
 
+/* Mensajes de éxito y error */
 .msg-exito, 
 .msg-error { 
     padding: 13px 16px; 
@@ -338,13 +348,13 @@ td .btn-del {
     font-size: 14px; 
     font-weight: 600; 
 }
-
+/* Mensaje de operación exitosa */
 .msg-exito { 
     background: #ecfdf3; 
     color: #166534; 
     border: 1px solid #bbf7d0; 
 }
-
+/* Mensaje de error */
 .msg-error { 
     background: #fef2f2; 
     color: var(--red); 
@@ -364,7 +374,9 @@ td .btn-del {
     text-align: center; 
     margin-top: 17px; 
 }
+/*PANTALLA DE INICIO DE SESIÓN*/
 
+/* Diseño principal del login */
 .login-body {
     display: flex; 
     justify-content: center; 
@@ -373,6 +385,7 @@ td .btn-del {
     background: radial-gradient(circle at top left, #dbeafe, transparent 45%), #f3f6fb;
 }
 
+/* Contenedor del formulario de acceso */
 .login-contenedor { 
     width: 100%; 
     max-width: 450px; 
@@ -432,19 +445,19 @@ td .btn-del {
     *, *::before, *::after { transition: none !important; }
 }
 
-
-/* ===== PANEL LATERAL TIPO DASHBOARD ===== */
 body:has(.app-shell) {
     padding: 0;
     background: #f3f6fb;
 }
+/*PANEL LATERAL DEL SISTEMA*/
 
+/* Estructura principal con menú lateral y contenido */
 .app-shell {
     display: grid;
     grid-template-columns: 245px minmax(0, 1fr);
     min-height: 100vh;
 }
-
+/* Menú lateral de navegación */
 .sidebar {
     position: sticky;
     top: 0;
@@ -458,7 +471,7 @@ body:has(.app-shell) {
     box-shadow: 5px 0 22px rgba(7, 26, 51, .10);
     z-index: 5;
 }
-
+/* Logo y nombre del sistema */
 .sidebar-brand {
     display: flex;
     align-items: center;
@@ -501,7 +514,7 @@ body:has(.app-shell) {
     letter-spacing: 1.4px;
     text-transform: uppercase;
 }
-
+/* Opciones del menú */
 .sidebar-nav { 
     display: flex; 
     flex-direction: column; 
@@ -526,7 +539,7 @@ body:has(.app-shell) {
     color: #fff;
     background: #1d3b62;
 }
-
+/* Opción seleccionada del menú */
 .sidebar-nav a.active {
     box-shadow: inset 3px 0 #60a5fa;
 }
@@ -572,7 +585,7 @@ body:has(.app-shell) {
     color: #91a7c4; 
     font-size: 11px; 
 }
-
+/* Área principal donde se muestra la información */
 .main-content { 
     min-width: 0; 
     padding: 28px; 
@@ -605,7 +618,9 @@ body:has(.app-shell) {
     color: #64748b; 
     font-size: 13px; 
 }
+/*DISEÑO RESPONSIVO*/
 
+/* Ajustes para tabletas */
 @media (max-width: 900px) {
     .app-shell { 
         grid-template-columns: 78px minmax(0,1fr); 
@@ -642,7 +657,7 @@ body:has(.app-shell) {
         padding: 20px 14px; 
     }
 }
-
+/* Ajustes para teléfonos móviles */
 @media (max-width: 560px) {
     .app-shell { 
         grid-template-columns: 1fr; 
