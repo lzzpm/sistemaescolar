@@ -1,16 +1,23 @@
 <?php
+// Inicia la sesión del administrador
 session_start();
+// Comprueba que el usuario haya iniciado sesión
 if (!isset($_SESSION['admin_usuario'])) {
     header("Location: login.php");
     exit();
 }
+// Conecta con la base de datos
 require_once 'conexion.php';
 
-// Obtener parámetros de búsqueda y filtrado enviadas por la URL (GET)
+/*FILTROS Y BÚSQUEDA DE ALUMNOS*/
+
+// Obtiene los datos de búsqueda enviados desde el formulario
 $filtro_curso = trim($_GET['filtro_curso'] ?? '');
 $buscar = trim($_GET['buscar'] ?? '');
 
-// Consulta base uniendo la tabla 'alumnos' con la tabla 'cursos'
+/*CONSULTA DE ALUMNOS*/
+
+// Consulta que obtiene los alumnos y el curso al que pertenecen
 $sql = "SELECT a.Codigo, a.Matricula, a.Nombre, a.Correo, c.nombre_curso
         FROM alumnos a
         LEFT JOIN cursos c ON a.Codigo_Curso = c.id
@@ -18,13 +25,13 @@ $sql = "SELECT a.Codigo, a.Matricula, a.Nombre, a.Correo, c.nombre_curso
 $tipos = '';
 $parametros = [];
 
-// Aplicar filtro por curso si se seleccionó uno
+// Aplica el filtro por curso seleccionado
 if ($filtro_curso !== '' && ctype_digit($filtro_curso)) {
     $sql .= " AND a.Codigo_Curso = ?";
     $tipos .= 'i';
     $parametros[] = (int)$filtro_curso;
 }
-// Aplicar búsqueda por nombre, matrícula o código
+// Aplicar la búsqueda por nombre, matrícula o código
 if ($buscar !== '') {
     $sql .= " AND (a.Nombre LIKE ? OR a.Matricula LIKE ? OR CAST(a.Codigo AS CHAR) LIKE ?)";
     $tipos .= 'sss';
@@ -33,17 +40,24 @@ if ($buscar !== '') {
     $parametros[] = $termino;
     $parametros[] = $termino;
 }
+// Ordena los registros del más reciente al más antiguo
 $sql .= " ORDER BY a.Codigo DESC";
 
-// Preparar y ejecutar la consulta dinámica
+/*EJECUTAR CONSULTA*/
+
+// Prepara y ejecuta la consulta
 $stmt = $conexion->prepare($sql);
 if ($tipos !== '') {
     $stmt->bind_param($tipos, ...$parametros);
 }
 $stmt->execute();
+// Guarda los resultados encontrados
 $registros = $stmt->get_result();
-// Consultar la lista completa de cursos para el desplegable del filtro
+/*LISTA DE CURSOS*/
+
+// Obtiene todos los cursos para el filtro
 $cursos_lista = $conexion->query("SELECT id, nombre_curso FROM cursos ORDER BY nombre_curso ASC");
+// Cuenta el total de resultados encontrados
 $total = $registros->num_rows;
 ?>
 <!DOCTYPE html>
@@ -57,15 +71,18 @@ $total = $registros->num_rows;
 <body>
 
 <div class="app-shell">
+    <!-- Menú lateral del sistema -->
     <?php require_once 'sidebar.php'; ?>
 
     <main class="main-content">
+        <!-- Barra superior de navegación -->
         <div class="main-topbar">
             <div class="breadcrumb">Sistema escolar / <strong>Alumnos registrados</strong></div>
             <div class="welcome">Bienvenido, <?= htmlspecialchars($_SESSION["admin_usuario"], ENT_QUOTES, "UTF-8") ?></div>
         </div>
 
         <div class="contenedor">
+            <!-- Encabezado de la página -->
             <div class="encabezado-pagina">
                 <div>
                     <h1>Alumnos registrados</h1>
@@ -74,12 +91,14 @@ $total = $registros->num_rows;
             </div>
 
             <?php if (($_GET['msg'] ?? '') === 'eliminado'): ?>
+                <!-- Mensaje cuando un alumno es eliminado -->
                 <div class="msg-exito">El alumno fue eliminado correctamente.</div>
             <?php endif; ?>
-            <!-- Formulario de filtros de búsqueda -->
+            <!-- Formulario para filtrar y buscar alumnos -->
             <form method="GET" class="filtros">
                 <div class="campo">
                     <label for="filtro_curso">Filtrar por curso</label>
+                    <!-- Lista de cursos disponibles -->
                     <select id="filtro_curso" name="filtro_curso">
                         <option value="">Todos los cursos</option>
                         <?php while ($c = $cursos_lista->fetch_assoc()): ?>
@@ -91,6 +110,7 @@ $total = $registros->num_rows;
                 </div>
                 <div class="campo">
                     <label for="buscar">Buscar alumno</label>
+                    <!-- Campo para buscar alumnos -->
                     <input id="buscar" type="text" name="buscar" placeholder="Nombre, matrícula o código" value="<?= htmlspecialchars($buscar, ENT_QUOTES, 'UTF-8') ?>">
                 </div>
                 <div class="acciones-filtro">
@@ -98,7 +118,7 @@ $total = $registros->num_rows;
                     <a class="limpiar" href="lista_alumnos.php">Limpiar</a>
                 </div>
             </form>
-
+            <!-- Resumen de resultados encontrados -->
             <div class="resumen">
                 <span>Resultados de la consulta</span>
                 <strong><?= $total ?> alumno<?= $total === 1 ? '' : 's' ?></strong>
