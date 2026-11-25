@@ -1,58 +1,78 @@
 <?php
+// Inicia la sesión del usuario
 session_start();
+// Incluye la conexión a la base de datos
 require_once 'conexion.php';
-
+// Variables para almacenar mensajes de error y éxito
 $error = '';
 $mensaje = '';
+// Determina qué vista mostrar (login o registro)
 $vista = isset($_GET['vista']) ? $_GET['vista'] : 'login';
-
+// Verifica si se envió un formulario
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // INICIAR SESIÓN
     if (isset($_POST['accion_login'])) {
-
+        // Obtiene y limpia el correo ingresado
         $correo = mysqli_real_escape_string(
             $conexion,
             $_POST['correo']
         );
+        // Obtiene la contraseña ingresada
         $password = $_POST['password'];
+        // Busca el usuario en la base de datos
         $res = mysqli_query(
             $conexion,
             "SELECT * FROM usuarios WHERE correo = '$correo'"
         );
+        // Verifica si existe el usuario
         if ($usr = mysqli_fetch_assoc($res)) {
+            // Comprueba que la contraseña sea correcta
             if (password_verify($password, $usr['password'])) {
+                // Regenera el identificador de sesión por seguridad
                 session_regenerate_id(true);
+                // Guarda el nombre del usuario en la sesión
                 $_SESSION['admin_usuario'] = $usr['nombre'];
+                // Redirige al sistema principal
                 header("Location: index.php");
                 exit();
             } else {
+                // Mensaje de contraseña incorrecta
                 $error = "Contraseña incorrecta";
             }
         } else {
+            // Mensaje si el correo no está registrado
             $error = "El correo no está registrado";
         }
     }
     // REGISTRAR UNA CUENTA
     if (isset($_POST['accion_registro'])) {
+        // Obtiene y limpia el nombre del usuario
         $nombre = mysqli_real_escape_string(
             $conexion,
             $_POST['nombre']
         );
+        // Obtiene y limpia el correo electrónico
         $correo = mysqli_real_escape_string(
             $conexion,
             $_POST['correo']
         );
+        // Genera una contraseña cifrada
         $pass_hash = password_hash(
             $_POST['password'],
             PASSWORD_BCRYPT
         );
+        // Consulta para registrar al usuario
         $query = "INSERT INTO usuarios
                   (nombre, correo, password)
                   VALUES ('$nombre', '$correo', '$pass_hash')";
+        // Ejecuta el registro del usuario
         if (mysqli_query($conexion, $query)) {
+            // Mensaje de registro exitoso
             $mensaje = "¡Cuenta creada con éxito! Ya puedes iniciar sesión.";
+            // Regresa a la vista de inicio de sesión
             $vista = 'login';
         } else {
+            // Muestra error si el correo ya existe
             $error = "El correo ya se encuentra registrado.";
             $vista = 'registro';
         }

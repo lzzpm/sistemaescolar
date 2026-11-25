@@ -43,7 +43,6 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
         </nav>
         <!-- Información del usuario que inició sesión -->
         <div class="sidebar-user">
-            <!-- Muestra la primera letra del nombre del administrador -->
             <div class="sidebar-avatar">
                 <?= htmlspecialchars(mb_substr($_SESSION["admin_usuario"] ?? 'A', 0, 1, "UTF-8"), ENT_QUOTES, "UTF-8") ?>
             </div>
