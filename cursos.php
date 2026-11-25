@@ -1,67 +1,72 @@
 <?php
-// Inicia la sesión para identificar al usuario que ingresó al sistema
+// Inicia la sesión del usuario
 session_start();
-// Verifica si el administrador ha iniciado sesión
+// Comprueba si el administrador ya inició sesión
 if (!isset($_SESSION['admin_usuario'])) {
-    // Si no ha iniciado sesión, lo envía al formulario de acceso
+    // Si no ha iniciado sesión, lo envía al login
     header("Location: login.php");
     exit();
 }
-// Conexión con la base de datos
+// Conecta con la base de datos
 require_once 'conexion.php';
 
-// Variables que se utilizarán durante el programa
+// Variables que se utilizarán en la página
 $curso_editar = null;
 $error = '';
 
 //Agregar cuso
 
+// Verifica si se envió el formulario para agregar un curso
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_curso'])) {
     // Obtiene los datos escritos en el formulario
     $nombre = trim($_POST['nombre_curso'] ?? '');
     $instructor = trim($_POST['instructor'] ?? '');
     $horario = trim($_POST['horario'] ?? '');
-    // Verifica que no existan campos vacíos
+    // Comprueba que todos los campos tengan información
     if ($nombre !== '' && $instructor !== '' && $horario !== '') {
-        // Guarda el nuevo curso en la base de datos
+        // Guarda el curso en la base de datos
         $stmt = $conexion->prepare("INSERT INTO cursos (nombre_curso, instructor, horario) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $nombre, $instructor, $horario);
         $stmt->execute();
         $stmt->close();
-        // Regresa a la página mostrando mensaje de éxito
+        // Muestra mensaje de éxito
         header("Location: cursos.php?msg=creado");
         exit();
     }
-    // Mensaje en caso de faltar información
+    // Mensaje si faltan datos
     $error = 'Completa todos los campos para agregar el curso.';
 }
 // ACTUALIZAR UN CURSO EXISTENTE
+
+// Verifica si se enviaron cambios de un curso
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_curso'])) {
-    // Obtiene los datos modificados
+    // Obtiene la información actualizada
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $nombre = trim($_POST['nombre_curso'] ?? '');
     $instructor = trim($_POST['instructor'] ?? '');
     $horario = trim($_POST['horario'] ?? '');
 
-    // Valida que la información sea correcta
+    // Comprueba que los datos sean válidos
     if ($id && $id > 0 && $nombre !== '' && $instructor !== '' && $horario !== '') {
-        // Actualiza los datos del curso seleccionado
+        // Actualiza la información del curso
         $stmt = $conexion->prepare("UPDATE cursos SET nombre_curso = ?, instructor = ?, horario = ? WHERE id = ?");
         $stmt->bind_param("sssi", $nombre, $instructor, $horario, $id);
         $stmt->execute();
         $stmt->close();
-        // Muestra mensaje de actualización exitosa
+        // Muestra mensaje de éxito
         header("Location: cursos.php?msg=actualizado");
         exit();
     }
-    // Mensaje si existe algún error en los datos
+    // Mensaje en caso de error
     $error = 'Revisa los datos del curso e inténtalo de nuevo.';
 }
 //ELIMINAR CURSO
+
+// Verifica si se seleccionó un curso para eliminar
 if (isset($_GET['eliminar'])) {
     $id = filter_input(INPUT_GET, 'eliminar', FILTER_VALIDATE_INT);
     if ($id && $id > 0) {
-        // Borra el curso de la base de datos
+        //Elimina el curso de la base de datos
         $stmt = $conexion->prepare("DELETE FROM cursos WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -71,21 +76,25 @@ if (isset($_GET['eliminar'])) {
     header("Location: cursos.php?msg=eliminado");
     exit();
 }
-//Modificar
+//EDITAR CURSO
+
+// Verifica si se seleccionó un curso para modificar
 if (isset($_GET['editar'])) {
     $id_edit = filter_input(INPUT_GET, 'editar', FILTER_VALIDATE_INT);
     if ($id_edit && $id_edit > 0) {
-        // Busca la información del curso seleccionado
+        // Busca la información del curso
         $stmt = $conexion->prepare("SELECT * FROM cursos WHERE id = ?");
         $stmt->bind_param("i", $id_edit);
         $stmt->execute();
         $resultado = $stmt->get_result();
-        // Guarda los datos para mostrarlos en el formulario
+        // Guarda los datos encontrados
         $curso_editar = $resultado->fetch_assoc();
         $stmt->close();
     }
 }
-// Listar cursos
+//MOSTRAR CURSOS
+
+// Obtiene la lista de cursos registrados
 $cursos = $conexion->query("SELECT * FROM cursos ORDER BY id DESC");
 //Mensajes del sistema
 $mensajes = [
@@ -93,6 +102,7 @@ $mensajes = [
     'actualizado' => '¡Curso actualizado con éxito!',
     'eliminado' => '¡Curso eliminado con éxito!'
 ];
+// Obtiene el mensaje correspondiente
 $msg = $_GET['msg'] ?? '';
 ?>
 <!DOCTYPE html>
@@ -106,9 +116,11 @@ $msg = $_GET['msg'] ?? '';
 <body>
 
 <div class="app-shell">
+    <!-- Menú lateral del sistema -->
     <?php require_once 'sidebar.php'; ?>
 
     <main class="main-content">
+        <!-- Encabezado principal -->
         <div class="main-topbar">
             <div class="breadcrumb">Sistema escolar / <strong>Cursos y horarios</strong></div>
             <div class="welcome">Bienvenido, <?= htmlspecialchars($_SESSION["admin_usuario"], ENT_QUOTES, "UTF-8") ?></div>
@@ -128,7 +140,7 @@ $msg = $_GET['msg'] ?? '';
             <?php if ($error !== ''): ?>
                 <div class="msg-error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
             <?php endif; ?>
-
+            <!-- Formulario para agregar o modificar cursos -->
             <section>
                 <h2><?= $curso_editar ? 'Modificar curso' : 'Agregar un curso' ?></h2>
                 <form method="POST">
@@ -162,6 +174,7 @@ $msg = $_GET['msg'] ?? '';
 
             <h2>Cursos disponibles</h2>
             <div class="tabla-contenedor">
+                <!-- Tabla con los cursos registrados -->
                 <table>
                     <thead>
                         <tr><th>ID</th><th>Nombre del curso</th><th>Docente</th><th>Horario</th><th>Acciones</th></tr>
@@ -169,6 +182,7 @@ $msg = $_GET['msg'] ?? '';
                     <tbody>
                     <?php if ($cursos->num_rows > 0): ?>
                         <?php while ($c = $cursos->fetch_assoc()): ?>
+                            <!-- Botones para modificar o eliminar cursos -->
                             <tr>
                                 <td><?= (int)$c['id'] ?></td>
                                 <td><strong><?= htmlspecialchars($c['nombre_curso'], ENT_QUOTES, 'UTF-8') ?></strong></td>

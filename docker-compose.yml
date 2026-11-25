@@ -1,8 +1,13 @@
+# Configuración de los servicios que utilizará la aplicación
 services:
+# Servicio principal de la página web
   web:
+  # Construye la imagen utilizando el Dockerfile del proyecto
     build: .
+  # Asigna el puerto local al puerto del servidor web
     ports:
       - "8081:80"
+    # Variables necesarias para conectarse a la base de datos
     environment:
       MYSQL_ADDON_HOST: b-mysql.services.clever-cloud.com
       MYSQL_ADDON_PORT: 3306

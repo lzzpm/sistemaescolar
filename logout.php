@@ -1,13 +1,14 @@
 <?php
+// Inicia la sesión actual
 session_start();
 
-// Eliminar todas las variables de sesión
+// Elimina todos los datos guardados en la sesión
 $_SESSION = array();
 
-// Destruir la sesión del administrador
+// Cierra la sesión del administrador
 session_destroy();
 
-// Regresar a la pantalla de inicio de sesión
+// Regresa al usuario a la pantalla de inicio de sesión
 header("Location: login.php");
 exit();
 ?>
